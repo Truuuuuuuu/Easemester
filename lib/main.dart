@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: Text('Easemester'),
-          centerTitle: true,
+          centerTitle: false,
         ),
         bottomNavigationBar: NavigationBar(
           destinations: [
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            NavigationDestination(
+            NavigationDestination(  
               icon: Icon(Icons.person),
               label: 'Profile',
             ),
