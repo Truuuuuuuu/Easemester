@@ -7,13 +7,17 @@ class NavbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: selectedPageNotifier,
+      valueListenable: selectedPageNotifier,  
       builder: (context, selectedPage, child) {
         return NavigationBar(
           destinations: [
             NavigationDestination(
               icon: Icon(Icons.home),
               label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.bubble_chart),
+              label: 'Workspace',
             ),
             NavigationDestination(
               icon: Icon(Icons.person),
