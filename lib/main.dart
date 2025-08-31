@@ -1,4 +1,5 @@
 import 'package:easemester_app/data/notifiers.dart';
+import 'package:easemester_app/views/pages/signin_page.dart';
 import 'package:easemester_app/views/widget_tree.dart';
 import 'package:flutter/material.dart';
 
@@ -25,11 +26,11 @@ class _MyAppState extends State<MyApp> {
             colorScheme: ColorScheme.fromSeed(
               seedColor: Colors.blue,
               brightness: isDarkMode
-                  ? Brightness.light
-                  : Brightness.dark,
+                  ? Brightness.dark
+                  : Brightness.light,
             ),
           ),
-          home: WidgetTree(),
+          home: SigninPage(),
         );
       },
     );
