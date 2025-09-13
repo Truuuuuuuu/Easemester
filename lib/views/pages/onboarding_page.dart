@@ -134,7 +134,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       ),
                       backgroundColor: const Color.fromARGB(255, 0, 16, 34),
                     ),
-                    child: const Text(
+                    child: const Text( 
                       'Get Started',
                       style: TextStyle(
                         color: Colors.white,

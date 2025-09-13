@@ -5,59 +5,95 @@ import 'package:flutter/material.dart';
 class NavbarWidget extends StatelessWidget {
   const NavbarWidget({super.key});
 
+  void addFile() {
+    print("Add file function triggered!");
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: selectedPageNotifier,
       builder: (context, selectedPage, child) {
-        return BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 6,
-          child: SizedBox(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+        return ValueListenableBuilder(
+          valueListenable: isDarkModeNotifier,
+          builder: (context, isDarkMode, child) {
+            Color iconColor(int index) {
+              return selectedPage == index
+                  ? KMainColor.icon
+                  : Colors.grey[600]!;
+            }
+
+            return Stack(
+              alignment: Alignment.bottomCenter,
               children: [
-                // Home
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: selectedPage == 0 ? KMainColor.icon : Colors.grey[600],
-                    size: 35,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 20.0,
+                    left: 16,
+                    right: 16,
                   ),
-                  onPressed: () => selectedPageNotifier.value = 0,
-                ),
-                // Workspace
-                IconButton(
-                  icon: Icon(
-                    Icons.bubble_chart,
-                    color: selectedPage == 1 ? KMainColor.icon : Colors.grey[600],
-                    size: 35,
+                  child: Material(
+                    elevation: 8,
+                    borderRadius: BorderRadius.circular(30),
+                    color: KMainColor
+                        .background, 
+                    child: SizedBox(
+                      height: 60,
+                      child: Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.home,
+                              color: iconColor(0),
+                              size: 30,
+                            ),
+                            onPressed: () =>
+                                selectedPageNotifier.value =
+                                    0,
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.bubble_chart,
+                              color: iconColor(1),
+                              size: 30,
+                            ),
+                            onPressed: () =>
+                                selectedPageNotifier.value =
+                                    1,
+                          ),
+                          const SizedBox(
+                            width: 60,
+                          ), // space for add button
+                          IconButton(
+                            icon: Icon(
+                              Icons.checklist,
+                              color: iconColor(2),
+                              size: 30,
+                            ),
+                            onPressed: () =>
+                                selectedPageNotifier.value =
+                                    2,
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.person,
+                              color: iconColor(3),
+                              size: 30,
+                            ),
+                            onPressed: () =>
+                                selectedPageNotifier.value =
+                                    3,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  onPressed: () => selectedPageNotifier.value = 1,
-                ),
-                const SizedBox(width: 40), 
-                // Checklist
-                IconButton(
-                  icon: Icon(
-                    Icons.checklist,
-                    color: selectedPage == 2 ? KMainColor.icon : Colors.grey[600],
-                    size: 35,
-                  ),
-                  onPressed: () => selectedPageNotifier.value = 2,
-                ),
-                // Profile
-                IconButton(
-                  icon: Icon(
-                    Icons.person,
-                    color: selectedPage == 3 ? KMainColor.icon : Colors.grey[600],
-                    size: 35,
-                  ),
-                  onPressed: () => selectedPageNotifier.value = 3,
                 ),
               ],
-            ),
-          ),
+            );
+          },
         );
       },
     );

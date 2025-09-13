@@ -13,16 +13,10 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           // Top header
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              'Easemester',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+          DrawerHeader(
+            child: Image.asset(
+              'assets/images/easemester_logo.png',
+              fit: BoxFit.contain,
             ),
           ),
           ValueListenableBuilder(
@@ -56,28 +50,28 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              Navigator.pushNamed(context, '/settings'); 
+              Navigator.pushNamed(context, '/settings');
             },
           ),
           ListTile(
             leading: const Icon(Icons.headset_mic_rounded),
             title: const Text('Support'),
             onTap: () {
-              Navigator.pushNamed(context, '/support'); 
+              Navigator.pushNamed(context, '/support');
             },
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('About us'),
             onTap: () {
-              Navigator.pushNamed(context, '/about_us'); 
+              Navigator.pushNamed(context, '/about_us');
             },
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('SIgn out'),
+            title: const Text('Exit'),
             onTap: () {
-              SystemNavigator.pop(); 
+              SystemNavigator.pop();
             },
           ),
         ],
