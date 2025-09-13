@@ -1,6 +1,6 @@
 import 'package:easemester_app/data/constant.dart';
 import 'package:easemester_app/data/notifiers.dart';
-import 'package:easemester_app/views/app_actions.dart';
+import 'package:easemester_app/app_actions.dart';
 import 'package:easemester_app/views/pages/checklist_page.dart';
 import 'package:easemester_app/views/pages/home_page.dart';
 import 'package:easemester_app/views/pages/profile_page.dart';
@@ -54,11 +54,11 @@ class WidgetTree extends StatelessWidget {
                   }
                 },
                 shape: const CircleBorder(),
-                backgroundColor: KMainColor.icon,
+                backgroundColor: Colors.white,
                 child: Icon(
                   Icons.add,
                   size: 36,
-                  color: KMainColor.fabIcon,
+                  color: Colors.black,
                 ),
               ),
             );

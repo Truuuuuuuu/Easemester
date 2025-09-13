@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:easemester_app/data/notifiers.dart';
-import 'package:easemester_app/data/constant.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -50,7 +49,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   builder: (context) {
                     return IconButton(
                       icon: const Icon(Icons.menu),
-                      color: KMainColor.icon,
+                      color: Theme.of(context).iconTheme.color,
                       iconSize: 40,
                       onPressed: () {
                         Scaffold.of(context).openEndDrawer();

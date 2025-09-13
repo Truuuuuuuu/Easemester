@@ -6,14 +6,9 @@ void main() {
   runApp(const MyApp());
 }
 
-
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
 
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -23,13 +18,11 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: isDarkMode
-                  ? Brightness.dark
-                  : Brightness.light,
+              seedColor: const Color(0xFF011023),
+              brightness: isDarkMode ? Brightness.dark : Brightness.light,
             ),
           ),
-          home: OnboardingPage(),
+          home: const OnboardingPage(),
         );
       },
     );
