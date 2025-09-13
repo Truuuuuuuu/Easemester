@@ -1,6 +1,5 @@
 import 'package:easemester_app/data/notifiers.dart';
-import 'package:easemester_app/views/pages/signin_page.dart';
-import 'package:easemester_app/views/widget_tree.dart';
+import 'package:easemester_app/views/pages/onboarding_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,7 +29,7 @@ class _MyAppState extends State<MyApp> {
                   : Brightness.light,
             ),
           ),
-          home: SigninPage(),
+          home: OnboardingPage(),
         );
       },
     );

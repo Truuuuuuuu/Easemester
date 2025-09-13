@@ -1,3 +1,4 @@
+import 'package:easemester_app/data/constant.dart';
 import 'package:easemester_app/data/notifiers.dart';
 import 'package:flutter/material.dart';
 
@@ -7,27 +8,56 @@ class NavbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: selectedPageNotifier,  
+      valueListenable: selectedPageNotifier,
       builder: (context, selectedPage, child) {
-        return NavigationBar(
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.home),
-              label: 'Home',
+        return BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 6,
+          child: SizedBox(
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // Home
+                IconButton(
+                  icon: Icon(
+                    Icons.home,
+                    color: selectedPage == 0 ? KMainColor.icon : Colors.grey[600],
+                    size: 35,
+                  ),
+                  onPressed: () => selectedPageNotifier.value = 0,
+                ),
+                // Workspace
+                IconButton(
+                  icon: Icon(
+                    Icons.bubble_chart,
+                    color: selectedPage == 1 ? KMainColor.icon : Colors.grey[600],
+                    size: 35,
+                  ),
+                  onPressed: () => selectedPageNotifier.value = 1,
+                ),
+                const SizedBox(width: 40), 
+                // Checklist
+                IconButton(
+                  icon: Icon(
+                    Icons.checklist,
+                    color: selectedPage == 2 ? KMainColor.icon : Colors.grey[600],
+                    size: 35,
+                  ),
+                  onPressed: () => selectedPageNotifier.value = 2,
+                ),
+                // Profile
+                IconButton(
+                  icon: Icon(
+                    Icons.person,
+                    color: selectedPage == 3 ? KMainColor.icon : Colors.grey[600],
+                    size: 35,
+                  ),
+                  onPressed: () => selectedPageNotifier.value = 3,
+                ),
+              ],
             ),
-            NavigationDestination(
-              icon: Icon(Icons.bubble_chart),
-              label: 'Workspace',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          onDestinationSelected: (value) {
-            selectedPageNotifier.value = value;
-          },
-          selectedIndex: selectedPage,
+          ),
         );
       },
     );
