@@ -1,4 +1,3 @@
-import 'package:easemester_app/data/constant.dart';
 import 'package:easemester_app/data/notifiers.dart';
 import 'package:easemester_app/app_actions.dart';
 import 'package:easemester_app/views/pages/checklist_page.dart';
@@ -10,8 +9,11 @@ import 'package:flutter/material.dart';
 import 'widgets/navbar_widget.dart';
 import 'widgets/app_drawer.dart';
 
+final GlobalKey<HomePageState> homePageKey =
+    GlobalKey<HomePageState>();
+
 List<Widget> pages = [
-  HomePage(),
+  HomePage(key: homePageKey),
   WorkspacePage(),
   ChecklistPage(),
   ProfilePage(),
@@ -39,31 +41,46 @@ class WidgetTree extends StatelessWidget {
       floatingActionButton: ValueListenableBuilder(
         valueListenable: selectedPageNotifier,
         builder: (context, selectedPage, child) {
-          if (selectedPage == 0 || selectedPage == 1 || selectedPage == 2) {
+          if (selectedPage == 0 ||
+              selectedPage == 1 ||
+              selectedPage == 2) {
             return SizedBox(
               width: 70,
               height: 70,
               child: FloatingActionButton(
                 onPressed: () {
                   if (selectedPage == 0) {
-                    addHomeFile(); // Home page action
+                    //checks which tab
+                    if (tabIndexNotifier.value == 0) {
+                      print('add in study hub');
+                      // Study Hub FAB action
+                      homePageKey.currentState?.addCard({
+                        'imageUrl':
+                            'assets/images/book1.png',
+                        'description': 'New Study Card',
+                      });
+                    } else if (tabIndexNotifier.value == 1) {
+                      // Files FAB action
+                      print("Add file in Files tab!");
+                      // upload file func
+                    }
                   } else if (selectedPage == 1) {
-                    addWorkspaceItem(); // Workspace page action
+                    addWorkspaceItem();
                   } else if (selectedPage == 2) {
-                    addChecklistItem(); // Checklist page action
+                    addChecklistItem();
                   }
                 },
                 shape: const CircleBorder(),
                 backgroundColor: Colors.white,
-                child: Icon(
+                child: const Icon(
                   Icons.add,
-                  size: 36,
+                  size: 42,
                   color: Colors.black,
                 ),
               ),
             );
           }
-          return const SizedBox.shrink(); // no FAB on other pages
+          return const SizedBox.shrink();
         },
       ),
 

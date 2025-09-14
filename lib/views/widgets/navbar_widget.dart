@@ -1,4 +1,3 @@
-import 'package:easemester_app/data/constant.dart';
 import 'package:easemester_app/data/notifiers.dart';
 import 'package:flutter/material.dart';
 

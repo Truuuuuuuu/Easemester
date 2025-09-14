@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "85477706962",
+    "project_id": "easemester-app",
+    "storage_bucket": "easemester-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85477706962:android:abbf64ee4f871f892a710b",
+        "android_client_info": {
+          "package_name": "com.example.easemester_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBsHe9EWbD8E36rwAFSJw8sOFnwSbGeaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

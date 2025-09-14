@@ -1,3 +1,4 @@
+import 'package:easemester_app/data/constant.dart';
 import 'package:easemester_app/views/widget_tree.dart';
 import 'package:flutter/material.dart';
 
@@ -88,23 +89,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         // Title
                         Text(
                           item['title']!,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
+                          style: AppFonts.title,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
                         // Description
                         Text(
                           item['description']!,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                            color: Colors.black54,
-                          ),
+                          style: AppFonts.paragraph,
                           textAlign: TextAlign.center,
                         ),
                       ],
