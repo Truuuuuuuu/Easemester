@@ -49,7 +49,7 @@ class NavbarWidget extends StatelessWidget {
                       ),
                       IconButton(
                         icon: Icon(
-                          Icons.bubble_chart,
+                          Icons.sticky_note_2,
                           color: iconColor(1),
                           size: 30,
                         ),

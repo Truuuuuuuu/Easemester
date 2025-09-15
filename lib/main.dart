@@ -1,3 +1,4 @@
+import 'package:easemester_app/data/constant.dart';
 import 'package:easemester_app/data/notifiers.dart';
 import 'package:easemester_app/views/pages/onboarding_page.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
               seedColor: const Color(0xFF011023),
-              brightness: isDarkMode ? Brightness.dark : Brightness.light,
+              brightness: isDarkMode
+                  ? Brightness.dark
+                  : Brightness.light,
             ),
           ),
           home: const OnboardingPage(),
