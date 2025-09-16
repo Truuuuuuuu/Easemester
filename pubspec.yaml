@@ -38,6 +38,7 @@ dependencies:
   flutter_switch: ^0.3.2
   flutter_launcher_icons: ^0.14.4
   shared_preferences: ^2.5.3
+  font_awesome_flutter: ^10.10.0
 
 dev_dependencies:
   flutter_test:
