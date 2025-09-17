@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:easemester_app/models/study_card_model.dart';
 
 class StudyCard extends StatelessWidget {
-  final String imageUrl;
-  final String description;
+  final StudyCardModel card;
   final VoidCallback onTap;
 
   const StudyCard({
     super.key,
-    required this.imageUrl,
-    required this.description,
+    required this.card,
     required this.onTap,
   });
 
@@ -27,14 +26,14 @@ class StudyCard extends StatelessWidget {
           children: [
             Expanded(
               child: Image.asset(
-                imageUrl,
+                card.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                description,
+                card.description,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,

@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../controllers/checklist_controller.dart';
-import '../../models/task.dart';
 import '../widgets/checklist_card.dart';
 
 class ChecklistPage extends StatefulWidget {
-  const ChecklistPage({super.key});
+  final ChecklistController controller;
+
+  const ChecklistPage({
+    super.key,
+    required this.controller,
+  });
 
   @override
-  State<ChecklistPage> createState() =>
-      ChecklistPageState();
+  ChecklistPageState createState() => ChecklistPageState();
 }
 
 class ChecklistPageState extends State<ChecklistPage> {
-  final ChecklistController controller =
-      ChecklistController();
+  ChecklistController get controller => widget.controller;
 
-  /// Exposed so [app_actions.dart] can call it via GlobalKey
-  void addChecklistItem() {
+  /// Exposed method to open add task dialog from FAB
+  void addChecklistItemDialog() {
     final titleController = TextEditingController();
     final descController = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (_) => AlertDialog(
         title: const Text("New Task"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -34,7 +36,7 @@ class ChecklistPageState extends State<ChecklistPage> {
                 labelText: "Title",
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             TextField(
               controller: descController,
               decoration: const InputDecoration(
@@ -67,10 +69,13 @@ class ChecklistPageState extends State<ChecklistPage> {
     );
   }
 
+  /// Show confirmation before deleting selected tasks
   Future<void> _confirmDelete() async {
+    if (controller.selectedTasks.isEmpty) return;
+
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (_) => AlertDialog(
         title: const Text("Delete Tasks"),
         content: Text(
           "Are you sure you want to delete ${controller.selectedTasks.length} selected task(s)?",
@@ -82,8 +87,8 @@ class ChecklistPageState extends State<ChecklistPage> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red, 
-              foregroundColor: Colors.white, 
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
             ),
             onPressed: () => Navigator.pop(context, true),
             child: const Text("Delete"),
@@ -99,79 +104,94 @@ class ChecklistPageState extends State<ChecklistPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          controller.selectionMode
-              ? "${controller.selectedTasks.length} selected"
-              : "Checklist",
-        ),
-        actions: [
-          if (controller.selectionMode)
-            IconButton(
-              icon: const FaIcon(FontAwesomeIcons.trashCan),
-              onPressed: controller.selectedTasks.isEmpty
-                  ? null
-                  : _confirmDelete,
-                  color: Colors.red,
-            ),
-          IconButton(
-            icon: FaIcon(
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
               controller.selectionMode
-                  ? Icons.close
-                  : FontAwesomeIcons.trashCan,
+                  ? "${controller.selectedTasks.length} selected"
+                  : "Checklist",
             ),
-            onPressed: () =>
-                setState(controller.toggleSelectionMode),
-          ),
-        ],
-      ),
-      body: controller.tasks.isEmpty
-          ? const Center(
-              child: Text(
-                "No tasks yet. Tap + to add one!",
-              ),
-            )
-          : ListView.builder(
-              itemCount: controller.tasks.length,
-              itemBuilder: (context, index) {
-                final Task task = controller.tasks[index];
-                final isSelected = controller.selectedTasks
-                    .contains(index);
-
-                return GestureDetector(
-                  onLongPress: () {
-                    if (!controller.selectionMode) {
-                      setState(() {
-                        controller.selectionMode = true;
-                        controller.selectedTasks.add(index);
-                      });
-                    }
-                  },
-                  onTap: () {
-                    if (controller.selectionMode) {
-                      setState(
-                        () => controller.toggleSelection(
-                          index,
-                        ),
-                      );
-                    }
-                  },
-                  child: ChecklistItem(
-                    title: task.title,
-                    description: task.description,
-                    done: task.done,
-                    isSelected: isSelected,
-                    selectionMode: controller.selectionMode,
-                    onChanged: (value) {
-                      setState(() {
-                        task.done = value ?? false;
-                      });
-                    },
+            actions: [
+              // Trash icon when selection mode is active
+              if (controller.selectionMode)
+                IconButton(
+                  icon: const FaIcon(
+                    FontAwesomeIcons.trashCan,
                   ),
-                );
-              },
-            ),
+                  color: Colors.red,
+                  onPressed:
+                      controller.selectedTasks.isEmpty
+                      ? null
+                      : _confirmDelete,
+                ),
+              // Toggle selection mode
+              IconButton(
+                icon: FaIcon(
+                  controller.selectionMode
+                      ? Icons.close
+                      : FontAwesomeIcons.trashCan,
+                ),
+                onPressed: () {
+                  setState(controller.toggleSelectionMode);
+                },
+              ),
+            ],
+          ),
+          body: controller.tasks.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No tasks yet. Tap + to add one!",
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: controller.tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = controller.tasks[index];
+                    final isSelected = controller
+                        .selectedTasks
+                        .contains(index);
+
+                    return GestureDetector(
+                      onLongPress: () {
+                        if (!controller.selectionMode) {
+                          setState(() {
+                            controller.selectionMode = true;
+                            controller.selectedTasks.add(
+                              index,
+                            );
+                          });
+                        }
+                      },
+                      onTap: () {
+                        if (controller.selectionMode) {
+                          setState(() {
+                            controller.toggleSelection(
+                              index,
+                            );
+                          });
+                        }
+                      },
+                      child: ChecklistItem(
+                        title: task.title,
+                        description: task.description,
+                        done: task.done,
+                        isSelected: isSelected,
+                        selectionMode:
+                            controller.selectionMode,
+                        onChanged: (value) {
+                          setState(() {
+                            task.done = value ?? false;
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
+        );
+      },
     );
   }
 }

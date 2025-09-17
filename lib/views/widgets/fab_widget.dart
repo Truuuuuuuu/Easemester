@@ -1,43 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:easemester_app/data/constant.dart';
+import 'package:easemester_app/controllers/home_controller.dart';
+import 'package:easemester_app/controllers/notes_controller.dart';
+import 'package:easemester_app/controllers/checklist_controller.dart';
+import 'package:easemester_app/models/study_card_model.dart';
+import 'package:easemester_app/views/pages/notes_page.dart';
+import 'package:easemester_app/views/pages/checklist_page.dart';
 import 'package:easemester_app/data/notifiers.dart';
-import 'package:easemester_app/app_actions.dart';
-import 'package:easemester_app/views/pages/home_page.dart';
+import 'package:easemester_app/data/constant.dart';
 
 class CustomFAB extends StatelessWidget {
-  final GlobalKey<HomePageState> homePageKey;
+  final HomeController homeController;
+  final NotesController notesController;
+  final ChecklistController checklistController;
 
-  const CustomFAB({super.key, required this.homePageKey});
+  final GlobalKey<NotesPageState>? notesPageKey;
+  final GlobalKey<ChecklistPageState>? checklistPageKey;
+
+  const CustomFAB({
+    super.key,
+    required this.homeController,
+    required this.notesController,
+    required this.checklistController,
+    this.notesPageKey,
+    this.checklistPageKey,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<int>(
       valueListenable: selectedPageNotifier,
       builder: (context, selectedPage, _) {
         if (selectedPage == 0) {
-          // HomePage FAB
           return _buildFab(() {
-            final tabController = homePageKey.currentState?.tabController;
-
-            if (tabController != null) {
-              if (tabController.index == 0) {
-                print('add in study hub');
-                homePageKey.currentState?.addStudyHubCard({
-                  'imageUrl': 'assets/images/book1.png',
-                  'description': 'New Study Hub Card',
-                });
-              } else if (tabController.index == 1) {
-                print('FAB in Files tab');
-              }
-            } else {
-              print("TabController not ready yet.");
+            final tabController =
+                homeController.tabController;
+            if (tabController.index == 0) {
+              homeController.addStudyHubCard(
+                StudyCardModel(
+                  imageUrl: 'assets/images/book1.png',
+                  description: 'New Study Hub Card',
+                ),
+              );
+            } else if (tabController.index == 1) {
+              homeController.addFileCard(
+                StudyCardModel(
+                  imageUrl: 'assets/images/book2.png',
+                  description: 'New File Card',
+                ),
+              );
             }
           });
         } else if (selectedPage == 1) {
-          return _buildFab(addNotesItem); 
+          return _buildFab(() {
+            notesPageKey?.currentState?.addNoteDialog();
+          });
         } else if (selectedPage == 2) {
-          return _buildFab(addChecklistItem);
+          return _buildFab(() {
+            checklistPageKey?.currentState?.addChecklistItemDialog();
+          });
         }
+
         return const SizedBox.shrink();
       },
     );

@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import '../../controllers/notes_controller.dart';
-import '../../models/note.dart';
-import '../widgets/note_card.dart';
+import '../widgets/notes/note_card.dart';
+import '../widgets/notes/note_detail.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NotesPage extends StatefulWidget {
-  const NotesPage({super.key});
+  final NotesController controller;
+
+  const NotesPage({super.key, required this.controller});
 
   @override
-  State<NotesPage> createState() => NotesPageState();
+  NotesPageState createState() => NotesPageState();
 }
 
 class NotesPageState extends State<NotesPage> {
-  final NotesController controller = NotesController();
-  final TextEditingController searchController =
-      TextEditingController();
+  NotesController get controller => widget.controller;
 
-  /// Exposed so [app_actions.dart] can call it via GlobalKey
-  void addNote() {
+  /// Exposed method to open add note dialog from FAB
+  void addNoteDialog() {
     final titleController = TextEditingController();
     final contentController = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (_) => AlertDialog(
         title: const Text("New Note"),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -32,15 +32,13 @@ class NotesPageState extends State<NotesPage> {
               controller: titleController,
               decoration: const InputDecoration(
                 labelText: "Title",
-                hintText: "Enter note title",
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             TextField(
               controller: contentController,
               decoration: const InputDecoration(
-                labelText: "Description",
-                hintText: "Enter note description",
+                labelText: "Content",
               ),
               maxLines: 3,
             ),
@@ -71,6 +69,8 @@ class NotesPageState extends State<NotesPage> {
   }
 
   Future<void> _confirmDelete() async {
+    if (controller.selectedNotes.isEmpty) return;
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -85,8 +85,8 @@ class NotesPageState extends State<NotesPage> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red, // red background
-              foregroundColor: Colors.white, // white text
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
             ),
             onPressed: () => Navigator.pop(context, true),
             child: const Text("Delete"),
@@ -96,7 +96,7 @@ class NotesPageState extends State<NotesPage> {
     );
 
     if (confirm == true) {
-      setState(controller.deleteSelected);
+      controller.deleteSelected();
     }
   }
 
@@ -104,125 +104,141 @@ class NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     final filteredNotes = controller.filteredNotes;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          controller.selectionMode
-              ? "${controller.selectedNotes.length} selected"
-              : "Notes",
-        ),
-        actions: [
-          if (controller.selectionMode)
-            IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons
-                    .trashCan, 
-                color: controller.selectedNotes.isNotEmpty
-                    ? Colors.red
-                    : null,
-              ),
-              onPressed: controller.selectedNotes.isEmpty
-                  ? null
-                  : _confirmDelete,
-            ),
-          IconButton(
-            icon: FaIcon(
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
               controller.selectionMode
-                  ? Icons.close
-                  : FontAwesomeIcons.trashCan, 
-              color: Colors.grey,
+                  ? "${controller.selectedNotes.length} selected"
+                  : "Notes",
             ),
-            onPressed: () =>
-                setState(controller.toggleSelectionMode),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          if (!controller.selectionMode)
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: TextField(
-                controller: searchController,
-                onChanged: (value) {
-                  setState(() {
-                    controller.searchQuery = value;
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: "Search notes...",
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+            actions: [
+              if (controller.selectionMode)
+                IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.trashCan,
+                    color:
+                        controller.selectedNotes.isNotEmpty
+                        ? Colors.red
+                        : null,
                   ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.05),
+                  onPressed:
+                      controller.selectedNotes.isEmpty
+                      ? null
+                      : () => _confirmDelete(),
                 ),
+              IconButton(
+                icon: FaIcon(
+                  controller.selectionMode
+                      ? Icons.close
+                      : FontAwesomeIcons.trashCan,
+                ),
+                onPressed: () {
+                  setState(controller.toggleSelectionMode);
+                },
               ),
-            ),
-          Expanded(
-            child: filteredNotes.isEmpty
-                ? Center(
-                    child: Text(
-                      controller.searchQuery.isNotEmpty
-                          ? "Couldn’t find any notes" // search but no result
-                          : "No notes yet. Tap + to add one!", // when completely empty
-                    ),
-                  )
-                : GridView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: filteredNotes.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 1,
-                        ),
-                    itemBuilder: (context, index) {
-                      final Note note =
-                          filteredNotes[index];
-                      final realIndex = controller.notes
-                          .indexOf(note);
-                      final isSelected = controller
-                          .selectedNotes
-                          .contains(realIndex);
-
-                      return GestureDetector(
-                        onLongPress: () {
-                          if (!controller.selectionMode) {
-                            setState(() {
-                              controller.selectionMode =
-                                  true;
-                              controller.selectedNotes.add(
-                                realIndex,
-                              );
-                            });
-                          }
-                        },
-                        onTap: () {
-                          if (controller.selectionMode) {
-                            setState(
-                              () => controller
-                                  .toggleSelection(
-                                    realIndex,
-                                  ),
-                            );
-                          }
-                        },
-                        child: NoteCard(
-                          title: note.title,
-                          content: note.content,
-                          isSelected: isSelected,
-                          selectionMode:
-                              controller.selectionMode,
-                        ),
-                      );
-                    },
-                  ),
+            ],
           ),
-        ],
-      ),
+          body: Column(
+            children: [
+              if (!controller.selectionMode)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: TextField(
+                    onChanged: (value) => setState(() {
+                      controller.searchQuery = value;
+                    }),
+                    decoration: InputDecoration(
+                      hintText: "Search notes...",
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          8,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(
+                        0.05,
+                      ),
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: filteredNotes.isEmpty
+                    ? Center(
+                        child: Text(
+                          controller.searchQuery.isNotEmpty
+                              ? "Couldn’t find any notes"
+                              : "No notes yet. Tap + to add one!",
+                        ),
+                      )
+                    : GridView.builder(
+                        padding: const EdgeInsets.all(12),
+                        itemCount: filteredNotes.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 1,
+                            ),
+                        itemBuilder: (context, index) {
+                          final note = filteredNotes[index];
+                          final realIndex = controller.notes
+                              .indexOf(note);
+                          final isSelected = controller
+                              .selectedNotes
+                              .contains(realIndex);
+
+                          return GestureDetector(
+                            onLongPress: () {
+                              if (!controller
+                                  .selectionMode) {
+                                setState(() {
+                                  controller.selectionMode =
+                                      true;
+                                  controller.selectedNotes
+                                      .add(realIndex);
+                                });
+                              }
+                            },
+                            onTap: () {
+                              if (controller
+                                  .selectionMode) {
+                                setState(
+                                  () => controller
+                                      .toggleSelection(
+                                        realIndex,
+                                      ),
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        NoteDetailPage(
+                                          note: note,
+                                        ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: NoteCard(
+                              note: note,
+                              isSelected: isSelected,
+                              selectionMode:
+                                  controller.selectionMode,
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

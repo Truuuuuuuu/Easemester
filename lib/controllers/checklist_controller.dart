@@ -1,17 +1,22 @@
-import '../models/task.dart';
+import 'package:flutter/material.dart';
+import '../models/task_model.dart';
 
-class ChecklistController {
-  final List<Task> tasks = [];
+class ChecklistController extends ChangeNotifier {
+  final List<TaskModel> tasks = [];
   final Set<int> selectedTasks = {};
   bool selectionMode = false;
 
   void addTask(String title, String description) {
-    tasks.add(Task(title: title, description: description));
+    tasks.add(
+      TaskModel(title: title, description: description),
+    );
+    notifyListeners();
   }
 
   void toggleSelectionMode() {
     selectionMode = !selectionMode;
     selectedTasks.clear();
+    notifyListeners();
   }
 
   void toggleSelection(int index) {
@@ -20,6 +25,7 @@ class ChecklistController {
     } else {
       selectedTasks.add(index);
     }
+    notifyListeners();
   }
 
   void deleteSelected() {
@@ -30,5 +36,6 @@ class ChecklistController {
     }
     selectedTasks.clear();
     selectionMode = false;
+    notifyListeners();
   }
 }

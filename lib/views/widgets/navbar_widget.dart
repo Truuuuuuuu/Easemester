@@ -4,20 +4,18 @@ import 'package:flutter/material.dart';
 class NavbarWidget extends StatelessWidget {
   const NavbarWidget({super.key});
 
-  void addFile() {
-    print("Add file function triggered!");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<int>(
       valueListenable: selectedPageNotifier,
       builder: (context, selectedPage, child) {
         Color iconColor(int index) {
           return selectedPage == index
-              ? Theme.of(context).colorScheme.primary 
+              ? Theme.of(context).colorScheme.primary
               : Theme.of(context).iconTheme.color!;
         }
+
+        final bool showFab = selectedPage != 3;
 
         return Stack(
           alignment: Alignment.bottomCenter,
@@ -31,7 +29,7 @@ class NavbarWidget extends StatelessWidget {
               child: Material(
                 elevation: 8,
                 borderRadius: BorderRadius.circular(30),
-                color: Theme.of(context).cardColor, 
+                color: Theme.of(context).cardColor,
                 child: SizedBox(
                   height: 60,
                   child: Row(
@@ -56,9 +54,16 @@ class NavbarWidget extends StatelessWidget {
                         onPressed: () =>
                             selectedPageNotifier.value = 1,
                       ),
-                      const SizedBox(
-                        width: 60,
-                      ), // space for add button
+
+                      //only part that animates
+                      AnimatedContainer(
+                        duration: const Duration(
+                          milliseconds: 300,
+                        ),
+                        curve: Curves.easeInOut,
+                        width: showFab ? 60 : 0,
+                      ),
+
                       IconButton(
                         icon: Icon(
                           Icons.checklist,

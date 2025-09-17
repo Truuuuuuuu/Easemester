@@ -1,9 +1,9 @@
-class Task {
+class TaskModel {
   String title;
   String description;
   bool done;
 
-  Task({
+  TaskModel({
     required this.title,
     required this.description,
     this.done = false,
