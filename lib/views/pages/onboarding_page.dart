@@ -2,7 +2,9 @@ import 'package:easemester_app/data/constant.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({super.key});
+  final VoidCallback? onFinish; // 👈 added callback
+
+  const OnboardingPage({super.key, this.onFinish});
 
   @override
   State<OnboardingPage> createState() =>
@@ -114,7 +116,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               ),
             ),
 
-            // Always reserve button space to avoid shifting
+            // Button section
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 24.0,
@@ -127,7 +129,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     currentPage == onboardingData.length - 1
                     ? ElevatedButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/login');
+                          if (widget.onFinish != null) {
+                            widget
+                                .onFinish!(); // 👈 notify StartupWrapper
+                          } else {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/login',
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -151,7 +161,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           ),
                         ),
                       )
-                    : const SizedBox.shrink(), 
+                    : const SizedBox.shrink(),
               ),
             ),
           ],

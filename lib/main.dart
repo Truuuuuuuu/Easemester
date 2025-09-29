@@ -4,7 +4,7 @@ import 'package:easemester_app/models/profile_model.dart';
 import 'package:easemester_app/routes/app_routes.dart';
 import 'package:easemester_app/views/auth/login_page.dart';
 import 'package:easemester_app/views/auth/register_page.dart';
-import 'package:easemester_app/views/pages/onboarding_page.dart';
+import 'package:easemester_app/views/auth/startup_wrapper.dart'; 
 import 'package:easemester_app/views/pages/profile/edit_profile_page.dart';
 import 'package:easemester_app/views/widget_tree.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,12 +32,13 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           routes: {
-            //CORE ROUTES
-            '/': (context) => const OnboardingPage(),
+            // CORE ROUTES
+            '/': (context) =>
+                const StartupWrapper(), // 👈 show onboarding first time only
             '/login': (context) => const LoginPage(),
             '/register': (context) => const RegisterPage(),
             '/home': (context) => const WidgetTree(),
-            //DETAIL ROUTES
+            // DETAIL ROUTES
             AppRoutes.editProfile: (context) {
               final user =
                   ModalRoute.of(context)!.settings.arguments
@@ -45,8 +46,6 @@ class MyApp extends StatelessWidget {
               return EditProfilePage(user: user);
             },
           },
-          //ONBOARDING
-          initialRoute: '/',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
               seedColor: const Color(0xFF011023),

@@ -12,8 +12,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthController _authController = AuthController();
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController();
+  final TextEditingController _passwordController =
+      TextEditingController();
   bool _isLoading = false;
 
   Future<void> _login() async {
@@ -23,7 +25,9 @@ class _LoginPageState extends State<LoginPage> {
     // Check empty fields
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        const SnackBar(
+          content: Text('Please fill all fields'),
+        ),
       );
       return;
     }
@@ -37,7 +41,10 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (user != null && mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(
+          context,
+          '/',
+        );
       }
     } on FirebaseAuthException catch (e) {
       String message;
@@ -57,11 +64,13 @@ class _LoginPageState extends State<LoginPage> {
           message = 'Authentication error: ${e.message}';
       }
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Unexpected error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unexpected error: $e')),
+      );
     } finally {
       setState(() => _isLoading = false);
     }
@@ -75,16 +84,20 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 48,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
                 "Sign In",
                 style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
               const SizedBox(height: 32),
 
@@ -98,8 +111,9 @@ class _LoginPageState extends State<LoginPage> {
                   filled: true,
                   fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -114,8 +128,9 @@ class _LoginPageState extends State<LoginPage> {
                   filled: true,
                   fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none),
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 32),
@@ -127,18 +142,24 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      )),
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        12,
+                      ),
+                    ),
+                  ),
                   child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
                       : const Text(
                           "Sign In",
                           style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                 ),
               ),
@@ -150,17 +171,21 @@ class _LoginPageState extends State<LoginPage> {
                   const Text("Don't have an account?"),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/register');
+                      Navigator.pushReplacementNamed(
+                        context,
+                        '/register',
+                      );
                     },
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
