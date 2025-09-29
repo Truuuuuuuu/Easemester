@@ -40,6 +40,8 @@ class _WidgetTreeState extends State<WidgetTree>
     );
     _notesController = NotesController();
     _checklistController = ChecklistController();
+
+    selectedPageNotifier.value = 0;
   }
 
   @override

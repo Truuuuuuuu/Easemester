@@ -1,3 +1,4 @@
+import 'package:easemester_app/helpers/dialog_helpers.dart';
 import 'package:easemester_app/models/profile_model.dart';
 import 'package:easemester_app/services/firestore_service.dart';
 import 'package:easemester_app/routes/navigation_helper.dart';
@@ -63,6 +64,17 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  //signout
+  Future<void> _signOut() async {
+    final confirm = await confirmSignOut(context);
+    if (confirm == true) {
+      await _auth.signOut();
+      if (mounted) {
+        NavigationHelper.goToLogin(context);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,12 +108,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         user != null &&
                             user!.profileImageUrl.isNotEmpty
                         ? NetworkImage(
-                                user!.profileImageUrl,
-                              )
-                              as ImageProvider
+                            user!.profileImageUrl,
+                          )
                         : const AssetImage(
-                            'assets/images/default_profile.png',
-                          ),
+                                'assets/images/default_profile.png',
+                              )
+                              as ImageProvider,
                     backgroundColor: Colors.grey[200],
                   ),
                   const SizedBox(height: 16),
@@ -177,6 +189,30 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 40),
+                  // Sign Out button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        'Sign Out',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                        ),
+                      ),
+                      onPressed: _signOut,
+                    ),
                   ),
                 ],
               ),

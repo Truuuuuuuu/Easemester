@@ -163,3 +163,32 @@ Future<bool?> confirmChanges(BuildContext context) async {
 
   return confirm;
 }
+
+/// Confirm sign out dialog
+Future<bool?> confirmSignOut(BuildContext context) async {
+  final confirm = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Sign Out"),
+      content: const Text(
+        "Are you sure you want to sign out?",
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text("Cancel"),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.redAccent,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text("Sign Out"),
+        ),
+      ],
+    ),
+  );
+
+  return confirm;
+}
