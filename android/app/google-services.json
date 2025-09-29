@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "85477706962",
+    "firebase_url": "https://easemester-app-default-rtdb.firebaseio.com",
     "project_id": "easemester-app",
     "storage_bucket": "easemester-app.firebasestorage.app"
   },
