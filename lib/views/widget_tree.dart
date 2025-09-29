@@ -5,7 +5,7 @@ import '../controllers/checklist_controller.dart';
 import '../views/pages/home_page.dart';
 import '../views/pages/notes_page.dart';
 import '../views/pages/checklist_page.dart';
-import '../views/pages/profile_page.dart';
+import 'pages/profile/profile_page.dart';
 import '../views/widgets/custom_appbar.dart';
 import 'widgets/navbar_widget.dart';
 import 'widgets/app_drawer.dart';
@@ -60,11 +60,7 @@ class _WidgetTreeState extends State<WidgetTree>
         key: checklistPageKey,
         controller: _checklistController,
       ),
-      ProfilePage(
-        userName: 'Jethruel Aguilar',
-        email: 'jethruel@gmail.com',
-        profileImageAsset: 'assets/images/user.png',
-      ),
+      ProfilePage(),
     ];
 
     return Scaffold(

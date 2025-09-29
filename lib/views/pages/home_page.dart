@@ -88,24 +88,35 @@ class HomePage extends StatelessWidget {
                   ),
 
                   // Files tab
-                  GridView.builder(
+                  Container(
                     padding: const EdgeInsets.all(16),
-                    itemCount: controller.filesCards.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.8,
-                        ),
-                    itemBuilder: (context, index) {
-                      final file =
-                          controller.filesCards[index];
-                      return StudyCard(
-                        card: file,
-                        onTap: () {},
-                      );
-                    },
+                    child: ListView.builder(
+                      itemCount:
+                          controller.filesCards.length,
+                      itemBuilder: (context, index) {
+                        final file =
+                            controller.filesCards[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 12,
+                          ),
+                          child: StudyCard(
+                            card: file,
+                            onTap: () {
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Tapped file: ${file.description}',
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

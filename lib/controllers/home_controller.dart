@@ -11,12 +11,12 @@ class HomeController extends ChangeNotifier {
   void addStudyHubCard(StudyCardModel card) {
     print('add file to study hub');
     studyHubCards.add(card);
-    notifyListeners(); // 🔥 notify listeners
+    notifyListeners(); //  notify listeners
   }
 
   void addFileCard(StudyCardModel card) {
     print('add file to files');
     filesCards.add(card);
-    notifyListeners(); // 🔥 notify listeners
+    notifyListeners(); //  notify listeners
   }
 }

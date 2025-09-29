@@ -1,5 +1,4 @@
 import 'package:easemester_app/data/constant.dart';
-import 'package:easemester_app/views/widget_tree.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -128,13 +127,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     currentPage == onboardingData.length - 1
                     ? ElevatedButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  WidgetTree(),
-                            ),
-                          );
+                          Navigator.pushReplacementNamed(context, '/login');
                         },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(

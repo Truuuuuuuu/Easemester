@@ -3,6 +3,7 @@ import '../../controllers/notes_controller.dart';
 import '../widgets/notes/note_card.dart';
 import '../widgets/notes/note_detail.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../helpers/dialog_helpers.dart';
 
 class NotesPage extends StatefulWidget {
   final NotesController controller;
@@ -17,86 +18,20 @@ class NotesPageState extends State<NotesPage> {
   NotesController get controller => widget.controller;
 
   /// Exposed method to open add note dialog from FAB
-  void addNoteDialog() {
-    final titleController = TextEditingController();
-    final contentController = TextEditingController();
-
-    showDialog(
+  void addNoteDialog() async {
+    final result = await showInputDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("New Note"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                labelText: "Title",
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: contentController,
-              decoration: const InputDecoration(
-                labelText: "Content",
-              ),
-              maxLines: 3,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (titleController.text.isNotEmpty) {
-                setState(() {
-                  controller.addNote(
-                    titleController.text,
-                    contentController.text,
-                  );
-                });
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Add"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _confirmDelete() async {
-    if (controller.selectedNotes.isEmpty) return;
-
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Delete Notes"),
-        content: Text(
-          "Are you sure you want to delete ${controller.selectedNotes.length} selected note(s)?",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text("Delete"),
-          ),
-        ],
-      ),
+      title: "New Note",
+      fields: ["Title", "Content"],
     );
 
-    if (confirm == true) {
-      controller.deleteSelected();
+    if (result != null && result["Title"]!.isNotEmpty) {
+      setState(() {
+        controller.addNote(
+          result["Title"]!,
+          result["Content"] ?? "",
+        );
+      });
     }
   }
 
@@ -115,6 +50,7 @@ class NotesPageState extends State<NotesPage> {
                   : "Notes",
             ),
             actions: [
+              // Show trashcan only in selection mode
               if (controller.selectionMode)
                 IconButton(
                   icon: FaIcon(
@@ -127,18 +63,22 @@ class NotesPageState extends State<NotesPage> {
                   onPressed:
                       controller.selectedNotes.isEmpty
                       ? null
-                      : () => _confirmDelete(),
+                      : () => confirmDeleteNotes(
+                          context,
+                          controller,
+                        ),
                 ),
-              IconButton(
-                icon: FaIcon(
-                  controller.selectionMode
-                      ? Icons.close
-                      : FontAwesomeIcons.trashCan,
+              // Close selection mode button
+              if (controller.selectionMode)
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    setState(
+                      () =>
+                          controller.toggleSelectionMode(),
+                    );
+                  },
                 ),
-                onPressed: () {
-                  setState(controller.toggleSelectionMode);
-                },
-              ),
             ],
           ),
           body: Column(
