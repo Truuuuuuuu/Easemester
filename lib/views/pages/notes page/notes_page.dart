@@ -1,9 +1,10 @@
+import 'package:easemester_app/routes/navigation_helper.dart';
 import 'package:flutter/material.dart';
-import '../../controllers/notes_controller.dart';
-import '../widgets/notes/note_card.dart';
-import '../widgets/notes/note_detail.dart';
+import '../../../controllers/notes_controller.dart';
+import '../../widgets/notes/note_card.dart';
+import '../../widgets/notes/note_detail.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../helpers/dialog_helpers.dart';
+import '../../../helpers/dialog_helpers.dart';
 
 class NotesPage extends StatefulWidget {
   final NotesController controller;
@@ -17,27 +18,17 @@ class NotesPage extends StatefulWidget {
 class NotesPageState extends State<NotesPage> {
   NotesController get controller => widget.controller;
 
-  /// Exposed method to open add note dialog from FAB
-  void addNoteDialog() async {
-    final result = await showInputDialog(
-      context: context,
-      title: "New Note",
-      fields: ["Title", "Content"],
-    );
-
-    if (result != null && result["Title"]!.isNotEmpty) {
-      setState(() {
-        controller.addNote(
-          result["Title"]!,
-          result["Content"] ?? "",
-        );
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final filteredNotes = controller.filteredNotes;
+
+    void _goToAddNote() {
+      NavigationHelper.goToAddNote(
+        context,
+        controller,
+      ).then((_) {
+      });
+    }
 
     return AnimatedBuilder(
       animation: controller,
@@ -73,10 +64,9 @@ class NotesPageState extends State<NotesPage> {
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () {
-                    setState(
-                      () =>
-                          controller.toggleSelectionMode(),
-                    );
+                    setState(() {
+                      controller.clearSelection();
+                    });
                   },
                 ),
             ],
@@ -87,9 +77,9 @@ class NotesPageState extends State<NotesPage> {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: TextField(
-                    onChanged: (value) => setState(() {
-                      controller.searchQuery = value;
-                    }),
+                    onChanged: (value) {
+                      controller.setSearchQuery(value);
+                    },
                     decoration: InputDecoration(
                       hintText: "Search notes...",
                       prefixIcon: const Icon(Icons.search),
@@ -136,12 +126,9 @@ class NotesPageState extends State<NotesPage> {
                             onLongPress: () {
                               if (!controller
                                   .selectionMode) {
-                                setState(() {
-                                  controller.selectionMode =
-                                      true;
-                                  controller.selectedNotes
-                                      .add(realIndex);
-                                });
+                                controller.startSelection(
+                                  realIndex,
+                                );
                               }
                             },
                             onTap: () {

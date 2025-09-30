@@ -49,7 +49,7 @@ class ChecklistPageState extends State<ChecklistPage> {
                   : "Checklist",
             ),
             actions: [
-              if (controller.selectionMode)
+              if (controller.selectionMode) ...[
                 IconButton(
                   icon: FaIcon(
                     FontAwesomeIcons.trashCan,
@@ -66,47 +66,75 @@ class ChecklistPageState extends State<ChecklistPage> {
                           controller,
                         ),
                 ),
-            ],
-          ),
-          body: ListView.builder(
-            itemCount: controller.tasks.length,
-            itemBuilder: (context, index) {
-              final task = controller.tasks[index];
-              final isSelected = controller.selectedTasks
-                  .contains(index);
-
-              return GestureDetector(
-                onLongPress: () {
-                  if (!controller.selectionMode) {
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
                     setState(() {
-                      controller.selectionMode = true;
-                      controller.selectedTasks.add(index);
-                    });
-                  }
-                },
-                onTap: () {
-                  if (controller.selectionMode) {
-                    setState(
-                      () =>
-                          controller.toggleSelection(index),
-                    );
-                  }
-                },
-                child: ChecklistItem(
-                  title: task.title,
-                  description: task.description,
-                  done: task.done,
-                  isSelected: isSelected,
-                  selectionMode: controller.selectionMode,
-                  onChanged: (value) {
-                    setState(() {
-                      task.done = value ?? false;
+                      controller.clearSelection();
                     });
                   },
                 ),
-              );
-            },
+              ],
+            ],
           ),
+          body: controller.tasks.isEmpty
+              ? Center(
+                  child: Text(
+                    "No task yet. Tap + to add one!",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(
+                          fontSize: 14,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onBackground,
+                        ),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: controller.tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = controller.tasks[index];
+                    final isSelected = controller
+                        .selectedTasks
+                        .contains(index);
+
+                    return GestureDetector(
+                      onLongPress: () {
+                        if (!controller.selectionMode) {
+                          setState(() {
+                            controller.selectionMode = true;
+                            controller.selectedTasks.add(
+                              index,
+                            );
+                          });
+                        }
+                      },
+                      onTap: () {
+                        if (controller.selectionMode) {
+                          setState(
+                            () => controller
+                                .toggleSelection(index),
+                          );
+                        }
+                      },
+                      child: ChecklistItem(
+                        title: task.title,
+                        description: task.description,
+                        done: task.done,
+                        isSelected: isSelected,
+                        selectionMode:
+                            controller.selectionMode,
+                        onChanged: (value) {
+                          setState(() {
+                            task.done = value ?? false;
+                          });
+                        },
+                      ),
+                    );
+                  },
+                ),
         );
       },
     );

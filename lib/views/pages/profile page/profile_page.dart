@@ -120,11 +120,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   // Name
                   Text(
                     user?.name ?? '',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
+
                   const SizedBox(height: 4),
                   // Email
                   Text(
@@ -206,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.red[500],
                         padding: const EdgeInsets.symmetric(
                           vertical: 16,
                         ),

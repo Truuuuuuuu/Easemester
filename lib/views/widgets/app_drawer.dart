@@ -60,6 +60,13 @@ class AppDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/about_us');
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Exit'),
+            onTap: () {
+              SystemNavigator.pop();
+            },
+          ),
         ],
       ),
     );

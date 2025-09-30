@@ -180,7 +180,7 @@ Future<bool?> confirmSignOut(BuildContext context) async {
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.redAccent,
+            backgroundColor: Colors.red[500],
             foregroundColor: Colors.white,
           ),
           onPressed: () => Navigator.pop(context, true),

@@ -3,9 +3,9 @@ import '../controllers/home_controller.dart';
 import '../controllers/notes_controller.dart';
 import '../controllers/checklist_controller.dart';
 import '../views/pages/home_page.dart';
-import '../views/pages/notes_page.dart';
+import 'pages/notes page/notes_page.dart';
 import '../views/pages/checklist_page.dart';
-import 'pages/profile/profile_page.dart';
+import 'pages/profile page/profile_page.dart';
 import '../views/widgets/custom_appbar.dart';
 import 'widgets/navbar_widget.dart';
 import 'widgets/app_drawer.dart';
@@ -66,6 +66,7 @@ class _WidgetTreeState extends State<WidgetTree>
     ];
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(),
       endDrawer: const AppDrawer(),
       body: ValueListenableBuilder(

@@ -28,6 +28,12 @@ class ChecklistController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearSelection() {
+    selectedTasks.clear();
+    selectionMode = false;
+    notifyListeners();
+  }
+
   void deleteSelected() {
     final indexes = selectedTasks.toList()
       ..sort((a, b) => b.compareTo(a));

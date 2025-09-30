@@ -19,6 +19,22 @@ class NotesController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void refreshNotes() {
+    notifyListeners();
+  }
+
+  void startSelection(int index) {
+    selectionMode = true;
+    selectedNotes.add(index);
+    notifyListeners();
+  }
+
+  void clearSelection() {
+    selectedNotes.clear();
+    selectionMode = false;
+    notifyListeners();
+  }
+
   void toggleSelectionMode() {
     selectionMode = !selectionMode;
     selectedNotes.clear();
@@ -42,6 +58,11 @@ class NotesController extends ChangeNotifier {
     }
     selectedNotes.clear();
     selectionMode = false;
+    notifyListeners();
+  }
+
+  void setSearchQuery(String query) {
+    searchQuery = query;
     notifyListeners();
   }
 

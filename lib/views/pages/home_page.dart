@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: controller, // 🔥 listens to HomeController
+      animation: controller, // listens to HomeController
       builder: (context, _) {
         return Column(
           children: [
