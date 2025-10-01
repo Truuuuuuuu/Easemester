@@ -1,3 +1,6 @@
+import 'package:easemester_app/repositories/notes_repository.dart';
+import 'package:easemester_app/services/firestore_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/notes_controller.dart';
@@ -38,7 +41,15 @@ class _WidgetTreeState extends State<WidgetTree>
     _homeController = HomeController(
       tabController: _tabController,
     );
-    _notesController = NotesController();
+    final currentUid =
+        FirebaseAuth.instance.currentUser!.uid;
+
+    _notesController = NotesController(
+      repository: NotesRepository(
+        firestoreService: FirestoreService(),
+      ),
+      uid: currentUid,
+    );
     _checklistController = ChecklistController();
 
     selectedPageNotifier.value = 0;

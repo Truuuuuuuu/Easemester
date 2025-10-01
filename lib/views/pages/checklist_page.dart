@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../controllers/checklist_controller.dart';
-import '../widgets/checklist_card.dart';
+import '../widgets/cards/checklist_card.dart';
 import '../../helpers/dialog_helpers.dart'; // <- Import helpers
 
 class ChecklistPage extends StatefulWidget {

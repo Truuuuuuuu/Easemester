@@ -16,7 +16,7 @@ class NoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: note.title, // or note.id if you add an id
+      tag: note.title, 
       child: Card(
         elevation: 3,
         shape: RoundedRectangleBorder(

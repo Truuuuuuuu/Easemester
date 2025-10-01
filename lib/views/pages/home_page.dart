@@ -1,7 +1,7 @@
 import 'package:easemester_app/data/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:easemester_app/views/widgets/study_card.dart';
-import 'package:easemester_app/views/widgets/achievement_card.dart';
+import 'package:easemester_app/views/widgets/cards/achievement_card.dart';
 import 'package:easemester_app/controllers/home_controller.dart';
 
 class HomePage extends StatelessWidget {

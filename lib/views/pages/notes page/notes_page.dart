@@ -1,8 +1,7 @@
-import 'package:easemester_app/routes/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import '../../../controllers/notes_controller.dart';
-import '../../widgets/notes/note_card.dart';
-import '../../widgets/notes/note_detail.dart';
+import '../../widgets/cards/note_card.dart';
+import 'note_detail.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../helpers/dialog_helpers.dart';
 
@@ -20,19 +19,11 @@ class NotesPageState extends State<NotesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredNotes = controller.filteredNotes;
-
-    void _goToAddNote() {
-      NavigationHelper.goToAddNote(
-        context,
-        controller,
-      ).then((_) {
-      });
-    }
-
     return AnimatedBuilder(
       animation: controller,
       builder: (context, _) {
+        final filteredNotes = controller.filteredNotes;
+        
         return Scaffold(
           appBar: AppBar(
             title: Text(
@@ -116,18 +107,17 @@ class NotesPageState extends State<NotesPage> {
                             ),
                         itemBuilder: (context, index) {
                           final note = filteredNotes[index];
-                          final realIndex = controller.notes
-                              .indexOf(note);
                           final isSelected = controller
                               .selectedNotes
-                              .contains(realIndex);
+                              .contains(note.id);
+                          ;
 
                           return GestureDetector(
                             onLongPress: () {
                               if (!controller
                                   .selectionMode) {
                                 controller.startSelection(
-                                  realIndex,
+                                  note.id,
                                 );
                               }
                             },
@@ -137,7 +127,7 @@ class NotesPageState extends State<NotesPage> {
                                 setState(
                                   () => controller
                                       .toggleSelection(
-                                        realIndex,
+                                        note.id,
                                       ),
                                 );
                               } else {

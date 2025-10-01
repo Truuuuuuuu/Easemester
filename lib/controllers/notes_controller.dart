@@ -1,31 +1,64 @@
+import 'package:easemester_app/repositories/notes_repository.dart';
 import 'package:flutter/material.dart';
 import '../models/note_model.dart';
 
 class NotesController extends ChangeNotifier {
-  final List<NoteModel> notes = [];
-  final Set<int> selectedNotes = {};
+  final NotesRepository repository;
+  final String uid;
+
+  // State
+  List<NoteModel> _notes = [];
+  List<NoteModel> get notes => _notes;
+
+  final Set<String> selectedNotes =
+      {}; // store note IDs instead of indexes
   bool selectionMode = false;
   String searchQuery = "";
 
-  void addNote(String title, String content) {
-    notes.add(
-      NoteModel(
-        id: DateTime.now().millisecondsSinceEpoch
-            .toString(),
-        title: title,
-        content: content,
-      ),
+  NotesController({
+    required this.repository,
+    required this.uid,
+  }) {
+    _listenToNotes();
+  }
+
+  // Listen to Firestore notes in real-time
+  void _listenToNotes() {
+    repository.getNotes(uid).listen((notesData) {
+      _notes = notesData;
+      notifyListeners();
+    });
+  }
+
+  // <<<ADD>>>
+  Future<void> addNote(String title, String content) async {
+    final note = NoteModel(
+      id: '',
+      title: title,
+      content: content,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
-    notifyListeners();
+    await repository.addNote(uid, note);
   }
 
-  void refreshNotes() {
-    notifyListeners();
+  // <<<UPDATE>>>
+  Future<void> updateNote(NoteModel note) async {
+    final updated = note.copyWith(
+      updatedAt: DateTime.now(),
+    );
+    await repository.updateNote(uid, updated);
   }
 
-  void startSelection(int index) {
+  // <<<DELETE>>>
+  Future<void> deleteNote(String noteId) async {
+    await repository.deleteNote(uid, noteId);
+  }
+
+  // <<<SELECTION>>>
+  void startSelection(String noteId) {
     selectionMode = true;
-    selectedNotes.add(index);
+    selectedNotes.add(noteId);
     notifyListeners();
   }
 
@@ -41,26 +74,25 @@ class NotesController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleSelection(int index) {
-    if (selectedNotes.contains(index)) {
-      selectedNotes.remove(index);
+  void toggleSelection(String noteId) {
+    if (selectedNotes.contains(noteId)) {
+      selectedNotes.remove(noteId);
     } else {
-      selectedNotes.add(index);
+      selectedNotes.add(noteId);
     }
     notifyListeners();
   }
 
-  void deleteSelected() {
-    final indexes = selectedNotes.toList()
-      ..sort((a, b) => b.compareTo(a));
-    for (final i in indexes) {
-      notes.removeAt(i);
+  Future<void> deleteSelected() async {
+    for (final id in selectedNotes) {
+      await repository.deleteNote(uid, id);
     }
     selectedNotes.clear();
     selectionMode = false;
     notifyListeners();
   }
 
+  // <<<SEARCH>>>
   void setSearchQuery(String query) {
     searchQuery = query;
     notifyListeners();
