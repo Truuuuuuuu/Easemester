@@ -42,7 +42,12 @@ class _AddNoteFormPageState extends State<AddNoteFormPage> {
       isDense: true,
       fillColor: isDark
           ? const Color(0xFF2C2C2C) // dark grey
-          : const Color.fromARGB(255, 242, 242, 242), // light grey
+          : const Color.fromARGB(
+              255,
+              242,
+              242,
+              242,
+            ), // light grey
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -116,13 +121,22 @@ class _AddNoteFormPageState extends State<AddNoteFormPage> {
                     backgroundColor:
                         theme.colorScheme.primary,
                   ),
-                  icon: const Icon(Icons.save, size: 22),
-                  label: const Text(
+                  icon: Icon(
+                    Icons.save,
+                    size: 22,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onPrimary,
+                  ),
+                  label: Text(
                     "Save Note",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
               ),

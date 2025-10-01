@@ -1,3 +1,4 @@
+import 'package:easemester_app/data/constant.dart';
 import 'package:flutter/material.dart';
 import '../../../controllers/notes_controller.dart';
 import '../../widgets/cards/note_card.dart';
@@ -23,47 +24,77 @@ class NotesPageState extends State<NotesPage> {
       animation: controller,
       builder: (context, _) {
         final filteredNotes = controller.filteredNotes;
-        
+
+        final hasSelection =
+            controller.selectionMode &&
+            controller.selectedNotes.isNotEmpty;
+
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              controller.selectionMode
-                  ? "${controller.selectedNotes.length} selected"
-                  : "Notes",
-            ),
-            actions: [
-              // Show trashcan only in selection mode
-              if (controller.selectionMode)
-                IconButton(
-                  icon: FaIcon(
-                    FontAwesomeIcons.trashCan,
-                    color:
-                        controller.selectedNotes.isNotEmpty
-                        ? Colors.red
-                        : null,
-                  ),
-                  onPressed:
-                      controller.selectedNotes.isEmpty
-                      ? null
-                      : () => confirmDeleteNotes(
-                          context,
-                          controller,
-                        ),
-                ),
-              // Close selection mode button
-              if (controller.selectionMode)
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    setState(() {
-                      controller.clearSelection();
-                    });
-                  },
-                ),
-            ],
-          ),
           body: Column(
             children: [
+              // Top label or selection bar
+              hasSelection
+                  ? Container(
+                      color:
+                          Theme.of(context).brightness ==
+                              Brightness.light
+                          ? Colors.grey[200] // light mode
+                          : Colors.grey[800], // dark mode
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${controller.selectedNotes.length} selected',
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: FaIcon(
+                                  FontAwesomeIcons.trashCan,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () =>
+                                    confirmDeleteNotes(
+                                      context,
+                                      controller,
+                                    ),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.close,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    controller
+                                        .clearSelection();
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Notes",
+                          style: AppFonts.title,
+                        ),
+                      ),
+                    ),
+
+              // Search bar (only when not in selection mode)
               if (!controller.selectionMode)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -86,6 +117,8 @@ class NotesPageState extends State<NotesPage> {
                     ),
                   ),
                 ),
+
+              // Notes grid
               Expanded(
                 child: filteredNotes.isEmpty
                     ? Center(
@@ -110,7 +143,6 @@ class NotesPageState extends State<NotesPage> {
                           final isSelected = controller
                               .selectedNotes
                               .contains(note.id);
-                          ;
 
                           return GestureDetector(
                             onLongPress: () {
@@ -124,12 +156,12 @@ class NotesPageState extends State<NotesPage> {
                             onTap: () {
                               if (controller
                                   .selectionMode) {
-                                setState(
-                                  () => controller
+                                setState(() {
+                                  controller
                                       .toggleSelection(
                                         note.id,
-                                      ),
-                                );
+                                      );
+                                });
                               } else {
                                 Navigator.push(
                                   context,
@@ -137,6 +169,8 @@ class NotesPageState extends State<NotesPage> {
                                     builder: (_) =>
                                         NoteDetailPage(
                                           note: note,
+                                          controller:
+                                              controller,
                                         ),
                                   ),
                                 );

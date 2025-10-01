@@ -1,3 +1,4 @@
+import 'package:easemester_app/repositories/checklist_repository.dart';
 import 'package:easemester_app/repositories/notes_repository.dart';
 import 'package:easemester_app/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +51,12 @@ class _WidgetTreeState extends State<WidgetTree>
       ),
       uid: currentUid,
     );
-    _checklistController = ChecklistController();
+    _checklistController = ChecklistController(
+      repository: ChecklistRepository(
+        firestoreService: FirestoreService(),
+      ),
+      uid: currentUid,
+    );
 
     selectedPageNotifier.value = 0;
   }

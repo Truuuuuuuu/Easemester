@@ -61,7 +61,7 @@ class CustomFAB extends StatelessWidget {
         } else if (selectedPage == 2) {
           return _buildFab(() {
             checklistPageKey?.currentState
-                ?.addChecklistItemDialog();
+                ?.addChecklistCardDialog();
           });
         }
 
